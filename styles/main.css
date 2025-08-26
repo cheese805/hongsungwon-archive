@@ -19,6 +19,12 @@
   font-display: block;
 }
 
+@media (hover: none) and (pointer: coarse), (max-width: 480px) {
+  .title{
+    transform: translateY(12px); /* 필요하면 10~16px 사이로 조정 */
+  }
+}
+
 /* ====== ① 비율 변수: 아이폰 SE (375/667) ====== */
 :root{
   --se-aspect: 0.5625; /* width / height */
@@ -79,12 +85,16 @@ body {
 
 .title {
   position: absolute;
-  top: -80px;
+  top: -55px;
   left: 30px;
   font-size: 8rem;
   font-family: 'Melodrame';
   z-index: 20;
+  line-height: 1;                 /* 폰트 메트릭으로 생기는 위로 튐 최소화 */
+  -webkit-text-size-adjust: 100%; /* iOS 확대 보정 방지 */
+  text-rendering: optimizeLegibility;
 }
+
 
 .subtitle {
   position: absolute;
