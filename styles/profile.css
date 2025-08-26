@@ -270,22 +270,6 @@ body {
   }
 }
 
-/* ---------- 모바일: vw 기준으로 재계산 ---------- */
-@media (hover:none) and (pointer:coarse){
-  :root{
-    --frame-w: min(100vw, calc(100dvh * var(--se-aspect)));
-    --frame-left: calc((100vw - var(--frame-w)) / 2);
-    --rail-center-x: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
-  }
-  .menu-popup{
-    left: var(--rail-center-x) !important;
-    transform: translateX(0) !important;
-  }
-  .fixed-icons{
-    left: var(--rail-center-x) !important;
-  }
-}
-
 /* ---------- iOS 하단 여백 ---------- */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   #profile-tab {
