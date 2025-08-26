@@ -38,7 +38,7 @@
   /* 레일/아이콘/팝업 규격 */
   --rail-w: 70px;                      /* grid 첫 컬럼과 반드시 동일 */
   --rail-border: 1px;
-  --popup-gap: 10px;
+  --popup-gap: 0px;
   --icon-size: 25px;                   /* 아이콘 가로 크기 */
 }
 
@@ -249,7 +249,12 @@ body {
   position: fixed;
   bottom: 20px;
   left: calc(
-    var(--frame-left) + var(--rail-w) + var(--rail-border) + var(--popup-gap)
+    var(--frame-left)
+    + var(--rail-w)
+    + var(--rail-border)
+    + var(--popup-gap)
+    + env(safe-area-inset-left, 0px)  /* ② 노치 여백도 반영 */
+    + var(--popup-nudge)
   );
   background: #fff;
   border: 1px solid #000;
@@ -257,6 +262,17 @@ body {
   padding: 8px 0;
   z-index: 2000;
 }
+
+/* 모바일(터치)에서만 살짝 오른쪽으로 밀기: 값은 8~14px 안에서 조정해봐 */
+@media (hover:none) and (pointer:coarse){
+  :root{ --popup-nudge: 12px; }
+}
+
+/* (iOS만 추가 보정이 필요하면) */
+@supports (-webkit-touch-callout: none){
+  :root{ --popup-nudge: 14px; } /* iOS에서 조금 더 */
+}
+
 .menu-popup a {
   display: block;
   padding: 8px 16px;
