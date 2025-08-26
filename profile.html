@@ -8,7 +8,7 @@
 </head>
   <!-- 좌측 하단 고정 아이콘 -->
   <div class="fixed-icons">
-    <a href="index.html"><img src="image/home.png" alt="Home"></a>
+    <a href="archive.html"><img src="image/home.png" alt="Home"></a>
     <img src="image/menu.png" alt="Menu" id="menu-btn">
   </div>
 
@@ -24,10 +24,19 @@
   <script>
     const menuBtn = document.getElementById('menu-btn');
     const menuPopup = document.getElementById('menu-popup');
+    const leftRail  = document.querySelector('.left-rail');
 
     menuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isVisible = menuPopup.style.display === 'block';
+      if (!isVisible && leftRail) {
+        const r = leftRail.getBoundingClientRect();
+        const centerX = r.left + r.width / 2;
+        menuPopup.style.position = 'fixed';
+        menuPopup.style.left = centerX + 'px';
+        menuPopup.style.transform = 'translateX(0)';
+        menuPopup.style.bottom = '20px';
+      }
       menuPopup.style.display = isVisible ? 'none' : 'block';
     });
 
