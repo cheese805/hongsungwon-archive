@@ -185,7 +185,7 @@ body {
 
 .debut { display: flex; align-items: flex-start; }
 .debut strong { display: inline-block; width: 52px; }
-.debut-detail { line-height: 1.6; }
+.debut-detail { line-height: 1.6; font-weight: 200;}
 
 /* 섹션 */
 .section { margin-bottom: 28px; }
