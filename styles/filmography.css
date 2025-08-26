@@ -31,19 +31,17 @@
 
 /* ---------- 공통 변수 ---------- */
 :root{
-  --se-aspect: 0.5625; /* 375/667 */
-
-  /* ✅ 스크롤바/툴바 변동 영향 최소화 */
+  --se-aspect: 0.5625;                 /* 375/667 */
   --frame-w: min(100svw, calc(100dvh * var(--se-aspect)));
   --frame-left: calc((100svw - var(--frame-w)) / 2);
 
-  /* ✅ 레일 규격(그리드와 반드시 동일) */
-  --rail-w: 70px;          /* ← 네 코드에선 grid가 70px이었음, 65px → 70px로 통일 */
+  /* 레일/아이콘/팝업 규격 */
+  --rail-w: 70px;                      
   --rail-border: 1px;
-  --popup-gap: 10px;
-
-  /* 아이콘 폭(레일 중앙 정렬 때 사용) */
   --icon-size: 25px;
+
+  /* 레일 중앙 좌표 (공용) */
+  --rail-center-x: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
 }
 
 /* ---------- 리셋 & 스크롤바/가로 스와이프 억제 ---------- */
@@ -199,22 +197,23 @@ body {
 }
 .fixed-icons img:hover{ transform: scale(1.1); }
 
-/* ---------- 메뉴 팝업 ---------- */
-/* 레일 보더 오른쪽으로 뜨도록 고정 */
-.menu-popup{
+/* ---------- 메뉴 팝업: 레일 중앙 기준 ---------- */
+#menu-popup {
   display: none;
   position: fixed;
   bottom: 20px;
-  left: calc(
-    var(--frame-left) + var(--rail-w) + var(--rail-border) + var(--popup-gap)
-  );
+
+  /* 레일 중앙 좌표를 기준으로 */
+  left: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
+  transform: translateX(0);
+
   background: #fff;
   border: 1px solid #000;
-  box-shadow: 2px 2px 6px rgba(0,0,0,.15);
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
   padding: 8px 0;
-  z-index: 10000;
+  z-index: 2000;
 }
-.menu-popup a{
+#menu-popup a {
   display: block;
   padding: 8px 16px;
   text-decoration: none;
@@ -222,7 +221,26 @@ body {
   font-family: 'Melodrame', serif;
   font-size: 20px;
 }
-.menu-popup a:hover{ background: #f0f0f0; }
+#menu-popup a:hover { background: #f0f0f0; }
+
+/* ---------- 모바일: vw 기준으로 좌표 재계산 ---------- */
+@media (hover:none) and (pointer:coarse){
+  :root{
+    --frame-w: min(100vw, calc(100dvh * var(--se-aspect)));
+    --frame-left: calc((100vw - var(--frame-w)) / 2);
+    --rail-center-x: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
+  }
+  #menu-popup{
+    left: var(--rail-center-x) !important;
+    transform: translateX(0) !important;
+    right: auto !important;
+  }
+  .fixed-icons{
+    left: var(--rail-center-x) !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
 
 /* ---------- iOS 하단 여백 ---------- */
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
