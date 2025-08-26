@@ -31,15 +31,16 @@
 /* ---------- 공통 변수 ---------- */
 :root{
   --se-aspect: 0.5625;                 /* 375/667 */
-  /* 레터박스/스크롤 영향 최소화 */
   --frame-w: min(100svw, calc(100dvh * var(--se-aspect)));
   --frame-left: calc((100svw - var(--frame-w)) / 2);
 
   /* 레일/아이콘/팝업 규격 */
-  --rail-w: 70px;                      /* grid 첫 컬럼과 반드시 동일 */
+  --rail-w: 70px;                      
   --rail-border: 1px;
-  --popup-gap: 0px;
-  --icon-size: 25px;                   /* 아이콘 가로 크기 */
+  --icon-size: 25px;
+
+  /* 레일 중앙 좌표 (공용) */
+  --rail-center-x: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
 }
 
 /* ---------- 리셋 & 바깥 프레임 ---------- */
@@ -48,36 +49,34 @@ html, body { height: 100%; }
 html, body {
   margin: 0;
   padding: 0;
-  /* 좌우 스와이프/가로 스크롤 방지 */
   overflow-x: clip;
   overscroll-behavior-x: none;
   touch-action: pan-y;
-  scrollbar-gutter: stable both-edges; /* 탭 간 가로폭 흔들림 방지 */
+  scrollbar-gutter: stable both-edges;
 }
 @supports not (overflow: clip){ html, body{ overflow-x:hidden; } }
 
 body {
-  background: #000;                  /* 좌우 레터박스 */
+  background: #000;
   color: #222;
   font-family: 'Pretendard', sans-serif;
   display: flex;
-  justify-content: center;           /* 가로만 중앙 */
-  align-items: flex-start;           /* 세로는 위에서 시작 */
-  overflow-y: scroll;                /* 세로 스크롤 항상 예약 */
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: scroll;
 }
 
 /* ---------- 전체 레이아웃(프레임) ---------- */
 .profile-page {
   position: relative;
-  width: var(--frame-w);             /* ✅ 변수로 통일 */
+  width: var(--frame-w);
   min-height: 100dvh;
   height: auto;
   background: #fafafa;
   margin: 0 auto;
-
   display: grid;
-  grid-template-columns: var(--rail-w) 1fr; /* ✅ 레일 폭 변수 사용 */
-  overflow: visible;                        /* 팝업 잘림 방지 */
+  grid-template-columns: var(--rail-w) 1fr;
+  overflow: visible;
   container-type: inline-size;
 }
 
@@ -101,7 +100,6 @@ body {
   position: relative;
 }
 
-/* Hong Sungwon */
 .side-name {
   position: absolute;
   top: -170px;
@@ -112,8 +110,6 @@ body {
   line-height: 1;
   white-space: nowrap;
 }
-
-/* Profile */
 .side-profile {
   position: absolute;
   top: -80px;
@@ -126,8 +122,6 @@ body {
 
 /* ---------- 우측 콘텐츠 ---------- */
 #profile-tab { padding: 40px 20px; }
-
-/* 이미지 */
 .profile-image {
   display: block;
   width: 100%;
@@ -135,8 +129,6 @@ body {
   border-radius: 8px;
   margin-bottom: 24px;
 }
-
-/* 이름 */
 .name-block {
   display: flex;
   align-items: baseline;
@@ -166,8 +158,6 @@ body {
   height: 1px;
   background-color: #000;
 }
-
-/* 기본 정보 */
 .info {
   font-size: 17px;
   line-height: 1.7;
@@ -182,7 +172,6 @@ body {
   font-weight: 400;
 }
 .info div:first-child { margin-bottom: 8px; }
-
 .debut { display: flex; align-items: flex-start; }
 .debut strong { display: inline-block; width: 52px; }
 .debut-detail { line-height: 1.6; font-weight: 200;}
@@ -203,8 +192,6 @@ body {
   font-weight: 400;
   margin-left: -7px;
 }
-
-/* 연도 - 작품 */
 .works { display: flex; flex-direction: column; gap: 8px; }
 .work-row { display: flex; }
 .year {
@@ -219,17 +206,12 @@ body {
   line-height: 1.6;
 }
 
-/* ---------- 고정 아이콘 (레일 왼쪽 칸 '가운데' 고정 + 미세조정) ---------- */
+/* ---------- 고정 아이콘 ---------- */
 .fixed-icons{
   position: fixed;
   bottom: 20px;
-
-  /* 레일 중앙(보더 보정 포함)에 기준점을 찍고 */
-  left: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
-
-  /* 중앙에서 약간 왼쪽으로 Npx 이동 (원하면 -3px 값을 바꿔) */
+  left: var(--rail-center-x);
   transform: translateX(calc(-50% - 20px));
-
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -243,37 +225,24 @@ body {
 }
 .fixed-icons img:hover { transform: scale(1.1); }
 
-/* ---------- 메뉴 팝업 (레일 보더 '오른쪽'에 붙이기) ---------- */
-.menu-popup {
+/* ---------- 메뉴 팝업: 레일 중앙 기준 ---------- */
+/* ---------- 메뉴 팝업: 레일 중앙 기준 ---------- */
+#menu-popup {
   display: none;
   position: fixed;
   bottom: 20px;
-  left: calc(
-    var(--frame-left)
-    + var(--rail-w)
-    + var(--rail-border)
-    + var(--popup-gap)
-    + env(safe-area-inset-left, 0px)  /* ② 노치 여백도 반영 */
-    + var(--popup-nudge)
-  );
+
+  /* 레일 중앙 좌표를 기준으로 */
+  left: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
+  transform: translateX(0);
+
   background: #fff;
   border: 1px solid #000;
   box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
   padding: 8px 0;
   z-index: 2000;
 }
-
-/* 모바일(터치)에서만 살짝 오른쪽으로 밀기: 값은 8~14px 안에서 조정해봐 */
-@media (hover:none) and (pointer:coarse){
-  :root{ --popup-nudge: 12px; }
-}
-
-/* (iOS만 추가 보정이 필요하면) */
-@supports (-webkit-touch-callout: none){
-  :root{ --popup-nudge: 14px; } /* iOS에서 조금 더 */
-}
-
-.menu-popup a {
+#menu-popup a {
   display: block;
   padding: 8px 16px;
   text-decoration: none;
@@ -281,14 +250,49 @@ body {
   font-family: 'Melodrame', serif;
   font-size: 20px;
 }
-.menu-popup a:hover { background: #f0f0f0; }
+#menu-popup a:hover { background: #f0f0f0; }
 
-/* ---------- iOS 하단 여백 대응 ---------- */
+/* ---------- 모바일: vw 기준으로 좌표 재계산 ---------- */
+@media (hover:none) and (pointer:coarse){
+  :root{
+    --frame-w: min(100vw, calc(100dvh * var(--se-aspect)));
+    --frame-left: calc((100vw - var(--frame-w)) / 2);
+    --rail-center-x: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
+  }
+  #menu-popup{
+    left: var(--rail-center-x) !important;
+    transform: translateX(0) !important;
+    right: auto !important;
+  }
+  .fixed-icons{
+    left: var(--rail-center-x) !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* ---------- 모바일: vw 기준으로 재계산 ---------- */
+@media (hover:none) and (pointer:coarse){
+  :root{
+    --frame-w: min(100vw, calc(100dvh * var(--se-aspect)));
+    --frame-left: calc((100vw - var(--frame-w)) / 2);
+    --rail-center-x: calc(var(--frame-left) + var(--rail-w)/2 + var(--rail-border)/2);
+  }
+  .menu-popup{
+    left: var(--rail-center-x) !important;
+    transform: translateX(0) !important;
+  }
+  .fixed-icons{
+    left: var(--rail-center-x) !important;
+  }
+}
+
+/* ---------- iOS 하단 여백 ---------- */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   #profile-tab {
     padding-bottom: calc(40px + env(safe-area-inset-bottom));
   }
 }
 
-/* (선택) iOS 글자 자동축소 방지 */
+/* ---------- iOS 글자 자동축소 방지 ---------- */
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
